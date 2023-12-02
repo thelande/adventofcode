@@ -13,9 +13,7 @@ type Reveal struct {
 	Blue, Red, Green int64
 }
 
-type Day2 struct {
-	Blue, Red, Green, Possible, TotalPower int64
-}
+type Day2 struct{}
 
 func parseLine(line string) (int64, []Reveal) {
 	var reveals []Reveal
@@ -56,29 +54,47 @@ func parseLine(line string) (int64, []Reveal) {
 }
 
 func (d Day2) Part1(filename string, logger log.Logger) int64 {
-	d.Red = 12
-	d.Green = 13
-	d.Blue = 14
+	var red, green, blue, possibleCount int64
+	red = 12
+	green = 13
+	blue = 14
 
 	util.ReadPuzzleInput(filename, logger, func(line string) error {
 		possible := true
 		gameId, reveals := parseLine(line)
 		for _, reveal := range reveals {
-			if reveal.Blue > d.Blue || reveal.Green > d.Green || reveal.Red > d.Red {
+			if reveal.Blue > blue || reveal.Green > green || reveal.Red > red {
 				possible = false
 			}
 		}
 
 		if possible {
-			d.Possible += gameId
+			possibleCount += gameId
 		}
 
 		return nil
 	})
 
-	return d.Possible
+	return possibleCount
 }
 
 func (d Day2) Part2(filename string, logger log.Logger) int64 {
-	return d.TotalPower
+	var totalPower int64
+
+	util.ReadPuzzleInput(filename, logger, func(line string) error {
+		_, reveals := parseLine(line)
+		var maxRed, maxBlue, maxGreen int64
+
+		for _, reveal := range reveals {
+			maxRed = max(maxRed, reveal.Red)
+			maxBlue = max(maxBlue, reveal.Blue)
+			maxGreen = max(maxGreen, reveal.Green)
+		}
+
+		totalPower += (maxRed * maxGreen * maxBlue)
+
+		return nil
+	})
+
+	return totalPower
 }

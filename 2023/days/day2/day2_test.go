@@ -36,7 +36,7 @@ func TestDay2_Part2(t *testing.T) {
 		filename string
 		want     int64
 	}{
-		{name: "sample", filename: "sample2.txt", want: 0},
+		{name: "sample", filename: "sample.txt", want: 2286},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
