@@ -6,6 +6,7 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/thelande/adventofcode/2023/days/day1"
+	util "github.com/thelande/adventofcode/common"
 
 	"github.com/prometheus/common/promlog"
 
@@ -36,19 +37,21 @@ func main() {
 
 	level.Info(logger).Log("msg", "adventofcode", "year", 2023, "day", *day)
 
-	var result1, result2 int64
+	var dayObj util.Day
 	switch *day {
 	case "day1":
-		if *part == 0 || *part == 1 {
-			result1 = day1.Day1Part1(*puzzleInput, logger)
-		}
-		if *part == 0 || *part == 2 {
-			result2 = day1.Day1Part2(*puzzleInput, logger)
-		}
+		dayObj = day1.Day1{}
 	default:
 		level.Error(logger).Log("msg", "Unknown day")
 		os.Exit(1)
 	}
 
+	var result1, result2 int64
+	if *part == 0 || *part == 1 {
+		result1 = dayObj.Part1(*puzzleInput, logger)
+	}
+	if *part == 0 || *part == 2 {
+		result2 = dayObj.Part2(*puzzleInput, logger)
+	}
 	level.Info(logger).Log("part 1", result1, "part 2", result2)
 }

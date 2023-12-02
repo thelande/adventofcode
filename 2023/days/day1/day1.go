@@ -11,7 +11,10 @@ import (
 	util "github.com/thelande/adventofcode/common"
 )
 
-func Day1Part1(filename string, logger log.Logger) int64 {
+// Implements Day
+type Day1 struct{}
+
+func (d Day1) Part1(filename string, logger log.Logger) int64 {
 	re := regexp.MustCompile(`[0-9]`)
 
 	var values []int64
@@ -33,7 +36,7 @@ func Day1Part1(filename string, logger log.Logger) int64 {
 	return util.SumSlice(values)
 }
 
-func Day1Part2(filename string, logger log.Logger) int64 {
+func (d Day1) Part2(filename string, logger log.Logger) int64 {
 	valMap := map[string]string{
 		"one":   "1",
 		"two":   "2",

@@ -10,6 +10,7 @@ import (
 func TestDay1Part1(t *testing.T) {
 	promlogConfig := &promlog.Config{}
 	logger := promlog.New(promlogConfig)
+	d := day1.Day1{}
 
 	tests := []struct {
 		name     string
@@ -20,9 +21,9 @@ func TestDay1Part1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := day1.Day1Part1(tt.filename, logger)
+			result := d.Part1(tt.filename, logger)
 			if result != tt.exp {
-				t.Fatalf(`Day1Part1("%s", logger) = %d, want %d`, tt.filename, result, tt.exp)
+				t.Fatalf(`d.Part1("%s", logger) = %d, want %d`, tt.filename, result, tt.exp)
 			}
 		})
 	}
@@ -31,6 +32,7 @@ func TestDay1Part1(t *testing.T) {
 func TestDay1Part2(t *testing.T) {
 	promlogConfig := &promlog.Config{}
 	logger := promlog.New(promlogConfig)
+	d := day1.Day1{}
 
 	tests := []struct {
 		name     string
@@ -41,9 +43,9 @@ func TestDay1Part2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := day1.Day1Part2(tt.filename, logger)
+			result := d.Part2(tt.filename, logger)
 			if result != tt.exp {
-				t.Fatalf(`Day1Part2("%s", logger) = %d, want %d`, tt.filename, result, tt.exp)
+				t.Fatalf(`d.Part2("%s", logger) = %d, want %d`, tt.filename, result, tt.exp)
 			}
 		})
 	}
