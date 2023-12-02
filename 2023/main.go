@@ -1,0 +1,54 @@
+package main
+
+import (
+	"os"
+
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
+	"github.com/thelande/adventofcode/2023/days/day1"
+
+	"github.com/prometheus/common/promlog"
+
+	kingpin "github.com/alecthomas/kingpin/v2"
+)
+
+var (
+	app         = kingpin.New("aoc2023", "Advent of Code, 2023")
+	day         = app.Arg("day", "Which day to run.").String()
+	puzzleInput = app.Arg("input", "Puzzle input file.").String()
+
+	logLevel = app.Flag("log.level", "The log level").Short('l').Default("info").String()
+	part     = app.Flag("part", "Which part to run (default, 0, is both)").Default("0").Short('p').Int()
+
+	logger log.Logger
+)
+
+func main() {
+	kingpin.CommandLine.UsageWriter(os.Stdout)
+	app.HelpFlag.Short('h')
+	kingpin.MustParse(app.Parse(os.Args[1:]))
+
+	promlogConfig := &promlog.Config{
+		Level: &promlog.AllowedLevel{},
+	}
+	promlogConfig.Level.Set(*logLevel)
+	logger = promlog.New(promlogConfig)
+
+	level.Info(logger).Log("msg", "adventofcode", "year", 2023, "day", *day)
+
+	var result1, result2 int64
+	switch *day {
+	case "day1":
+		if *part == 0 || *part == 1 {
+			result1 = day1.Day1Part1(*puzzleInput, logger)
+		}
+		if *part == 0 || *part == 2 {
+			result2 = day1.Day1Part2(*puzzleInput, logger)
+		}
+	default:
+		level.Error(logger).Log("msg", "Unknown day")
+		os.Exit(1)
+	}
+
+	level.Info(logger).Log("part 1", result1, "part 2", result2)
+}
