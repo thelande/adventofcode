@@ -15,15 +15,15 @@ func TestDay1Part1(t *testing.T) {
 	tests := []struct {
 		name     string
 		filename string
-		exp      int64
+		want     int64
 	}{
-		{name: "sample", filename: "sample.txt", exp: 142},
+		{name: "sample", filename: "sample.txt", want: 142},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := d.Part1(tt.filename, logger)
-			if result != tt.exp {
-				t.Fatalf(`d.Part1("%s", logger) = %d, want %d`, tt.filename, result, tt.exp)
+			if result != tt.want {
+				t.Fatalf(`d.Part1("%s", logger) = %d, want %d`, tt.filename, result, tt.want)
 			}
 		})
 	}
@@ -37,15 +37,15 @@ func TestDay1Part2(t *testing.T) {
 	tests := []struct {
 		name     string
 		filename string
-		exp      int64
+		want     int64
 	}{
-		{name: "sample", filename: "sample2.txt", exp: 281},
+		{name: "sample", filename: "sample2.txt", want: 281},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := d.Part2(tt.filename, logger)
-			if result != tt.exp {
-				t.Fatalf(`d.Part2("%s", logger) = %d, want %d`, tt.filename, result, tt.exp)
+			if result != tt.want {
+				t.Fatalf(`d.Part2("%s", logger) = %d, want %d`, tt.filename, result, tt.want)
 			}
 		})
 	}

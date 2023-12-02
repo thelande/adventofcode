@@ -19,7 +19,6 @@ func (d Day1) Part1(filename string, logger log.Logger) int64 {
 
 	var values []int64
 	util.ReadPuzzleInput(filename, logger, func(line string) error {
-		level.Debug(logger).Log("line", line)
 		split := re.FindAllString(line, -1)
 
 		sVal := fmt.Sprintf("%s%s", split[0], split[len(split)-1])
@@ -76,7 +75,6 @@ func (d Day1) Part2(filename string, logger log.Logger) int64 {
 
 	var values []int64
 	util.ReadPuzzleInput(filename, logger, func(line string) error {
-		level.Debug(logger).Log("line", line)
 		revLine := util.Reverse(line)
 
 		fwd := fwdRe.FindAllString(line, -1)

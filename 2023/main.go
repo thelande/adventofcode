@@ -6,6 +6,7 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/thelande/adventofcode/2023/days/day1"
+	"github.com/thelande/adventofcode/2023/days/day2"
 	util "github.com/thelande/adventofcode/common"
 
 	"github.com/prometheus/common/promlog"
@@ -41,6 +42,8 @@ func main() {
 	switch *day {
 	case "day1":
 		dayObj = day1.Day1{}
+	case "day2":
+		dayObj = day2.Day2{}
 	default:
 		level.Error(logger).Log("msg", "Unknown day")
 		os.Exit(1)
