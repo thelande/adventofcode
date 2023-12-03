@@ -59,7 +59,7 @@ func (d Day2) Part1(filename string, logger log.Logger) int64 {
 	green = 13
 	blue = 14
 
-	util.ReadPuzzleInput(filename, logger, func(line string) error {
+	util.ReadPuzzleInput(filename, logger, func(line string, lineno int) error {
 		gameId, reveals := parseLine(line)
 		for _, reveal := range reveals {
 			if reveal.Blue > blue || reveal.Green > green || reveal.Red > red {
@@ -78,7 +78,7 @@ func (d Day2) Part1(filename string, logger log.Logger) int64 {
 func (d Day2) Part2(filename string, logger log.Logger) int64 {
 	var totalPower int64
 
-	util.ReadPuzzleInput(filename, logger, func(line string) error {
+	util.ReadPuzzleInput(filename, logger, func(line string, lineno int) error {
 		_, reveals := parseLine(line)
 		var maxRed, maxBlue, maxGreen int64
 

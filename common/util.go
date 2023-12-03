@@ -11,7 +11,7 @@ import (
 /**
  * Read the puzzle input file, filename, and call lineCallback for each line read from the file.
  */
-func ReadPuzzleInput(filename string, logger log.Logger, lineCallback func(line string) error) error {
+func ReadPuzzleInput(filename string, logger log.Logger, lineCallback func(line string, lineno int) error) error {
 	level.Debug(logger).Log("msg", "Loading puzzle input", "filename", filename)
 	f, err := os.Open(filename)
 	if err != nil {
@@ -24,7 +24,7 @@ func ReadPuzzleInput(filename string, logger log.Logger, lineCallback func(line 
 	for lineno = 0; scanner.Scan(); lineno++ {
 		line := scanner.Text()
 		level.Debug(logger).Log("line", line)
-		if err = lineCallback(line); err != nil {
+		if err = lineCallback(line, lineno); err != nil {
 			return err
 		}
 	}
