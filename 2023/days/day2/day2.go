@@ -60,17 +60,14 @@ func (d Day2) Part1(filename string, logger log.Logger) int64 {
 	blue = 14
 
 	util.ReadPuzzleInput(filename, logger, func(line string) error {
-		possible := true
 		gameId, reveals := parseLine(line)
 		for _, reveal := range reveals {
 			if reveal.Blue > blue || reveal.Green > green || reveal.Red > red {
-				possible = false
+				return nil
 			}
 		}
 
-		if possible {
-			possibleCount += gameId
-		}
+		possibleCount += gameId
 
 		return nil
 	})
