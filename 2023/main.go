@@ -7,6 +7,7 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/thelande/adventofcode/2023/days/day1"
 	"github.com/thelande/adventofcode/2023/days/day2"
+	"github.com/thelande/adventofcode/2023/days/day3"
 	util "github.com/thelande/adventofcode/common"
 
 	"github.com/prometheus/common/promlog"
@@ -16,8 +17,8 @@ import (
 
 var (
 	app         = kingpin.New("aoc2023", "Advent of Code, 2023")
-	day         = app.Arg("day", "Which day to run.").String()
-	puzzleInput = app.Arg("input", "Puzzle input file.").String()
+	day         = app.Arg("day", "Which day to run.").Required().String()
+	puzzleInput = app.Arg("input", "Puzzle input file.").Required().String()
 
 	logLevel = app.Flag("log.level", "The log level").Short('l').Default("info").String()
 	part     = app.Flag("part", "Which part to run (default, 0, is both)").Default("0").Short('p').Int()
@@ -44,6 +45,8 @@ func main() {
 		dayObj = day1.Day1{}
 	case "day2":
 		dayObj = day2.Day2{}
+	case "day3":
+		dayObj = day3.Day3{}
 	default:
 		level.Error(logger).Log("msg", "Unknown day")
 		os.Exit(1)

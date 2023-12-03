@@ -23,7 +23,7 @@ func ReadPuzzleInput(filename string, logger log.Logger, lineCallback func(line 
 	var lineno int
 	for lineno = 0; scanner.Scan(); lineno++ {
 		line := scanner.Text()
-		level.Debug(logger).Log("line", line)
+		level.Debug(logger).Log("lineno", lineno, "line", line)
 		if err = lineCallback(line, lineno); err != nil {
 			return err
 		}
