@@ -57,12 +57,12 @@ func NewCardFromLine(line string) *Card {
 }
 
 // Returns the number of winning numbers matched on this card.
-func (card Card) Matches(logger log.Logger) int64 {
-	var count int64
+func (card Card) Matches(logger log.Logger) int {
+	var count int
 
 	winIdx := 0
 	for _, num := range card.CardNumbers {
-		level.Debug(logger).Log("num", num, "winIdx", winIdx, "winningNums[winIdx]", card.WinningNumbers[winIdx], "count", count)
+		// level.Debug(logger).Log("num", num, "winIdx", winIdx, "winningNums[winIdx]", card.WinningNumbers[winIdx], "count", count)
 		for ; winIdx < len(card.WinningNumbers) && card.WinningNumbers[winIdx] < num; winIdx++ {
 			// Skip over entries in winningNums until we get to a number
 			// that is not less than the current card number.
@@ -74,7 +74,7 @@ func (card Card) Matches(logger log.Logger) int64 {
 		}
 
 		if card.WinningNumbers[winIdx] == num {
-			level.Debug(logger).Log("num", num, "winningNums[winIdx]", card.WinningNumbers[winIdx])
+			// level.Debug(logger).Log("num", num, "winningNums[winIdx]", card.WinningNumbers[winIdx])
 			count++
 		}
 	}
@@ -110,5 +110,23 @@ func (d Day4) Part2(filename string, logger log.Logger) int64 {
 		return nil
 	})
 
-	return 0
+	numCards := len(cards)
+	count := int64(numCards)
+	for idx, card := range cards {
+		matches := card.Matches(logger)
+		level.Debug(logger).Log("idx", idx, "card.Copies", card.Copies, "matches", matches)
+
+		if matches == 0 {
+			continue
+		}
+
+		// Increase the number of copies for the next matches number of cards.
+		for i := 1; i <= matches && idx+i < numCards; i++ {
+			level.Debug(logger).Log("idx+i", idx+i)
+			cards[idx+i].Copies += card.Copies
+			count += int64(card.Copies)
+		}
+	}
+
+	return count
 }
