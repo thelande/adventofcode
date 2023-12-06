@@ -3,6 +3,8 @@ package util
 import (
 	"bufio"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
@@ -54,4 +56,20 @@ func Reverse(s string) string {
 		runes[i], runes[j] = runes[j], runes[i]
 	}
 	return string(runes)
+}
+
+/**
+ * Convert a space separated list of numbers to an int64 slice.
+ */
+func NumListToSlice(line string) []int64 {
+	var values []int64
+	parts := strings.Split(strings.Trim(line, " "), " ")
+	for _, p := range parts {
+		val, err := strconv.ParseInt(p, 10, 64)
+		if err != nil {
+			panic(err)
+		}
+		values = append(values, val)
+	}
+	return values
 }

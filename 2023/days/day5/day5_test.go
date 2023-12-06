@@ -1,4 +1,4 @@
-package day4
+package day5
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/prometheus/common/promlog"
 )
 
-func TestDay4_Part1(t *testing.T) {
+func TestDay5_Part1(t *testing.T) {
 	promlogConfig := &promlog.Config{}
 	logger := promlog.New(promlogConfig)
 	tests := []struct {
@@ -14,19 +14,19 @@ func TestDay4_Part1(t *testing.T) {
 		filename string
 		want     int64
 	}{
-		{name: "sample", filename: "sample.txt", want: 13},
+		{name: "sample", filename: "sample.txt", want: 35},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d := Day4{}
+			d := Day5{}
 			if got := d.Part1(tt.filename, logger); got != tt.want {
-				t.Errorf("Day4.Part1() = %v, want %v", got, tt.want)
+				t.Errorf("Day5.Part1() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestDay4_Part2(t *testing.T) {
+func TestDay5_Part2(t *testing.T) {
 	promlogConfig := &promlog.Config{}
 	logger := promlog.New(promlogConfig)
 	tests := []struct {
@@ -34,13 +34,13 @@ func TestDay4_Part2(t *testing.T) {
 		filename string
 		want     int64
 	}{
-		{name: "sample", filename: "sample.txt", want: 30},
+		{name: "sample", filename: "sample.txt", want: 46},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d := Day4{}
+			d := Day5{}
 			if got := d.Part2(tt.filename, logger); got != tt.want {
-				t.Errorf("Day4.Part2() = %v, want %v", got, tt.want)
+				t.Errorf("Day5.Part2() = %v, want %v", got, tt.want)
 			}
 		})
 	}
