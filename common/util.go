@@ -3,6 +3,7 @@ package util
 import (
 	"bufio"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -48,6 +49,17 @@ func SumSlice(s []int64) int64 {
 }
 
 /**
+ * Multiply the values of s and return the product.
+ */
+func MultSlice(s []int64) int64 {
+	var total int64 = 1
+	for _, val := range s {
+		total *= val
+	}
+	return total
+}
+
+/**
  * Reverse and return s
  */
 func Reverse(s string) string {
@@ -63,7 +75,8 @@ func Reverse(s string) string {
  */
 func NumListToSlice(line string) []int64 {
 	var values []int64
-	parts := strings.Split(strings.Trim(line, " "), " ")
+	splitRegexp := regexp.MustCompile(`\s+`)
+	parts := splitRegexp.Split(strings.Trim(line, " "), -1)
 	for _, p := range parts {
 		val, err := strconv.ParseInt(p, 10, 64)
 		if err != nil {
