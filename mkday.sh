@@ -12,6 +12,12 @@ test -z "$2" && { usage; exit 2; }
 YEAR="$1"
 DAY="$2"
 
+PAT='^[0-9]{1,2}$'
+if ! [[ $DAY =~ $PAT ]]; then
+	echo "error: <day number> must be a number."
+	exit 1
+fi
+
 DAY_DIR="$YEAR/days/day$DAY"
 DAY_FILE="$DAY_DIR/day$DAY.go"
 DAY_TEST_FILE="$DAY_DIR/day${DAY}_test.go"
