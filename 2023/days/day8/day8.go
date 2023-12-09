@@ -1,7 +1,6 @@
 package day8
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/go-kit/log"
@@ -60,6 +59,25 @@ func stepsToEnd(start string, end *string, endRune *rune, directions string, nod
 	return value
 }
 
+func GCD(a, b int64) int64 {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+func LCM(a, b int64, numbers ...int64) int64 {
+	result := a * b / GCD(a, b)
+
+	for i := 0; i < len(numbers); i++ {
+		result = LCM(result, numbers[i])
+	}
+
+	return result
+}
+
 func (d Day8) Part1(filename string, logger log.Logger) int64 {
 	var directions string
 	nodes := make(map[string]*Node)
@@ -98,16 +116,16 @@ func (d Day8) Part2(filename string, logger log.Logger) int64 {
 		return nil
 	})
 
-	// Find and track the paths
-	var paths []string
+	// Find the distances for each starting node.
+	var paths []int64
+	end := 'Z'
 	for k := range nodes {
 		if k[2] == 'A' {
-			paths = append(paths, k)
+			paths = append(paths, stepsToEnd(k, nil, &end, directions, nodes))
 		}
 	}
 
-	level.Debug(logger).Log("directions", directions)
-	level.Debug(logger).Log("len(paths)", len(paths), "paths", fmt.Sprintf("%s", paths))
+	value = LCM(paths[0], paths[1], paths[2:]...)
 
 	return value
 }
