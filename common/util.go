@@ -3,7 +3,6 @@ package util
 import (
 	"bufio"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -74,9 +73,8 @@ func Reverse(s string) string {
  * Convert a space separated list of numbers to an int64 slice.
  */
 func NumListToSlice(line string) []int64 {
-	var values []int64
-	splitRegexp := regexp.MustCompile(`\s+`)
-	parts := splitRegexp.Split(strings.Trim(line, " "), -1)
+	parts := strings.Fields(strings.Trim(line, " "))
+	values := make([]int64, 0, len(parts))
 	for _, p := range parts {
 		val, err := strconv.ParseInt(p, 10, 64)
 		if err != nil {

@@ -13,6 +13,7 @@ import (
 	"github.com/thelande/adventofcode/2023/days/day6"
 	"github.com/thelande/adventofcode/2023/days/day7"
 	"github.com/thelande/adventofcode/2023/days/day8"
+	"github.com/thelande/adventofcode/2023/days/day9"
 	util "github.com/thelande/adventofcode/common"
 
 	"github.com/prometheus/common/promlog"
@@ -62,6 +63,8 @@ func main() {
 		dayObj = day7.Day7{}
 	case "day8":
 		dayObj = day8.Day8{}
+	case "day9":
+		dayObj = day9.Day9{}
 	default:
 		level.Error(logger).Log("msg", "Unknown day")
 		os.Exit(1)
