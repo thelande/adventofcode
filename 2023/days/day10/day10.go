@@ -12,39 +12,41 @@ type Day10 struct{}
 
 /**
  * Link the tree of cells from the string-based map.
- *
- * Returns the starting cell.
  */
-func LinkTreeFromMap(cellMap [][]rune, cells [][]*Cell) *Cell {
+func LinkTreeFromMap(cellMap [][]rune, cells [][]*Cell, partTwo bool) {
+	for i := range cells {
+		for j := range cells[i] {
+			cell := cells[i][j]
+			if i > 0 {
+				cell.LinkNorth(cells, i, j)
+			}
+			if i+1 < len(cells) {
+				cell.LinkSouth(cells, i, j)
+			}
+			if j > 0 {
+				cell.LinkWest(cells, i, j)
+			}
+			if j+1 < len(cells[i]) {
+				cell.LinkEast(cells, i, j)
+			}
+		}
+	}
+}
+
+func FindStart(cellMap [][]rune, cells [][]*Cell) *Cell {
 	var start *Cell
 	for i := range cells {
 		for j := range cells[i] {
-			switch cellMap[i][j] {
-			case '|':
-				cells[i][j].LinkNorth(cells, i, j)
-				cells[i][j].LinkSouth(cells, i, j)
-			case '-':
-				cells[i][j].LinkEast(cells, i, j)
-				cells[i][j].LinkWest(cells, i, j)
-			case 'L':
-				cells[i][j].LinkNorth(cells, i, j)
-				cells[i][j].LinkEast(cells, i, j)
-			case 'J':
-				cells[i][j].LinkNorth(cells, i, j)
-				cells[i][j].LinkWest(cells, i, j)
-			case '7':
-				cells[i][j].LinkSouth(cells, i, j)
-				cells[i][j].LinkWest(cells, i, j)
-			case 'F':
-				cells[i][j].LinkSouth(cells, i, j)
-				cells[i][j].LinkEast(cells, i, j)
-			case 'S':
+			if cellMap[i][j] == 'S' {
 				start = cells[i][j]
+				break
 			}
 		}
 	}
 
-	// Figure out the neighbors of S
+	if start == nil {
+		panic("Never found start")
+	}
 
 	// North
 	if start.Y > 0 && cells[start.Y-1][start.X].South == start {
@@ -66,12 +68,12 @@ func LinkTreeFromMap(cellMap [][]rune, cells [][]*Cell) *Cell {
 	return start
 }
 
-func MakeTree(cellMap [][]rune) [][]*Cell {
+func MakeTree(cellMap [][]rune, partTwo bool) [][]*Cell {
 	cells := make([][]*Cell, len(cellMap))
 	for i, row := range cellMap {
 		cells[i] = make([]*Cell, len(row))
 		for j := range row {
-			cells[i][j] = &Cell{X: j, Y: i}
+			cells[i][j] = &Cell{X: j, Y: i, Symbol: cellMap[i][j]}
 		}
 	}
 	return cells
@@ -92,7 +94,7 @@ func BFS(start *Cell) int64 {
 		}
 
 		for _, c := range []*Cell{val.North, val.East, val.South, val.West} {
-			if c != nil && !slices.Contains(seen, c) {
+			if c != nil && c.IsLinked(val) && !slices.Contains(seen, c) {
 				c.Depth = val.Depth + 1
 				queue.Push(c)
 				seen = append(seen, c)
@@ -113,7 +115,9 @@ func (d Day10) Part1(filename string, logger log.Logger) int64 {
 		return nil
 	})
 
-	return BFS(LinkTreeFromMap(cellMap, MakeTree(cellMap)))
+	cells := MakeTree(cellMap, false)
+	LinkTreeFromMap(cellMap, cells, false)
+	return BFS(FindStart(cellMap, cells))
 }
 
 func (d Day10) Part2(filename string, logger log.Logger) int64 {
