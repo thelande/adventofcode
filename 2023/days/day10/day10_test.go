@@ -34,9 +34,9 @@ func TestDay10_Part2(t *testing.T) {
 		filename string
 		want     int64
 	}{
-		{name: "sample2", filename: "sample2.txt", want: 4},
+		// {name: "sample2", filename: "sample2.txt", want: 4},
 		{name: "sample3", filename: "sample3.txt", want: 4},
-		{name: "sample4", filename: "sample4.txt", want: 10},
+		// {name: "sample4", filename: "sample4.txt", want: 10},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

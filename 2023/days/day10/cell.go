@@ -44,6 +44,29 @@ func (c *Cell) IsLinked(x *Cell) bool {
 	return false
 }
 
+// Returns true if this cell is ground and adjacent to an edge,
+// or is not a ground cell but is a pipe perpendicular to an edge.
+func (c *Cell) IsExit() bool {
+	return (c.IsGround() && (c.North == nil || c.South == nil || c.East == nil || c.West == nil)) ||
+		(!c.IsGround() && ((c.North == nil && slices.Contains(southPipes, c.Symbol)) ||
+			(c.South == nil && slices.Contains(northPipes, c.Symbol)) ||
+			(c.East == nil && slices.Contains(westPipes, c.Symbol)) ||
+			(c.West == nil && slices.Contains(eastPipes, c.Symbol))))
+}
+
+// Returns true if the current cell is a pipe and it exits (is perpendicular)
+// to x which is a ground cell.
+func (c *Cell) ExitsTo(x *Cell) bool {
+	if !x.IsGround() {
+		return false
+	}
+
+	return ((c.North == x && slices.Contains(northPipes, c.Symbol)) ||
+		(c.South == x && slices.Contains(southPipes, c.Symbol)) ||
+		(c.East == x && slices.Contains(eastPipes, c.Symbol)) ||
+		(c.West == x && slices.Contains(westPipes, c.Symbol)))
+}
+
 func (c *Cell) LinkNorth(cells [][]*Cell, i, j int) {
 	if i == 0 {
 		return

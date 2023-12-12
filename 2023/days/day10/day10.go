@@ -1,6 +1,7 @@
 package day10
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/go-kit/log"
@@ -30,6 +31,21 @@ func LinkTreeFromMap(cellMap [][]rune, cells [][]*Cell, partTwo bool) {
 				cell.LinkEast(cells, i, j)
 			}
 		}
+	}
+}
+
+func PrintMap(cells [][]*Cell) {
+	fmt.Printf("  ")
+	for x := range cells[0] {
+		fmt.Printf("%d", x)
+	}
+	fmt.Println()
+	for i := range cells {
+		fmt.Printf("%d ", i)
+		for j := range cells[i] {
+			fmt.Printf("%c", cells[i][j].Symbol)
+		}
+		fmt.Println()
 	}
 }
 
@@ -107,6 +123,64 @@ func BFS(start *Cell) int64 {
 	return last.Depth
 }
 
+func BFS2(start *Cell) bool {
+	var seen []*Cell
+
+	seen = append(seen, start)
+	queue := queue.NewQueue[*Cell]()
+	queue.Push(start)
+
+	for !queue.Empty() {
+		val, err := queue.Pop()
+		if err != nil {
+			panic(err)
+		}
+
+		if val.IsExit() {
+			fmt.Println("Path")
+			for _, n := range val.Path {
+				fmt.Printf("(%d,%d) [%c]\n", n.X, n.Y, n.Symbol)
+			}
+			return true
+		}
+
+		for _, c := range []*Cell{val.North, val.East, val.South, val.West} {
+			if c != nil && !slices.Contains(seen, c) {
+				push := false
+				// Ground connects to ground
+				if val.IsGround() && c.IsGround() {
+					push = true
+				} else if val.IsGround() {
+					// Ground can enter pipes that open to the ground.
+					if val.South == c && slices.Contains([]rune{'|', '7', 'F'}, c.Symbol) {
+						push = true
+					} else if val.North == c && slices.Contains([]rune{'|', 'L', 'J'}, c.Symbol) {
+						// Look south
+						push = true
+					} else if val.East == c && slices.Contains([]rune{'-', 'F', 'L'}, c.Symbol) {
+						// Look west
+						push = true
+					} else if val.West == c && slices.Contains([]rune{'-', '7', 'J'}, c.Symbol) {
+						// Look east
+						push = true
+					}
+				} else if !val.IsGround() && (val.IsLinked(c) || val.ExitsTo(c)) {
+					push = true
+				}
+
+				if push {
+					c.Path = append(c.Path, val.Path...)
+					c.Path = append(c.Path, val)
+					queue.Push(c)
+					seen = append(seen, c)
+				}
+			}
+		}
+	}
+
+	return false
+}
+
 func (d Day10) Part1(filename string, logger log.Logger) int64 {
 	var cellMap [][]rune
 
@@ -122,12 +196,35 @@ func (d Day10) Part1(filename string, logger log.Logger) int64 {
 
 func (d Day10) Part2(filename string, logger log.Logger) int64 {
 	var value int64
-	var pipeMap [][]rune
+	var cellMap [][]rune
 
 	util.ReadPuzzleInput(filename, logger, func(line string, lineno int) error {
-		pipeMap = append(pipeMap, []rune(line))
+		cellMap = append(cellMap, []rune(line))
 		return nil
 	})
+
+	cells := MakeTree(cellMap, true)
+	var groundCells []*Cell
+	for i := range cells {
+		for j := range cells[i] {
+			if cells[i][j].IsGround() {
+				groundCells = append(groundCells, cells[i][j])
+			}
+		}
+	}
+
+	LinkTreeFromMap(cellMap, cells, true)
+
+	PrintMap(cells)
+
+	BFS2(cells[6][2])
+
+	for _, cell := range groundCells {
+		if !BFS2(cell) {
+			value++
+			fmt.Println(cell.Path)
+		}
+	}
 
 	return value
 }
