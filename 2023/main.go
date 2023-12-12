@@ -7,6 +7,7 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/thelande/adventofcode/2023/days/day1"
 	"github.com/thelande/adventofcode/2023/days/day10"
+	"github.com/thelande/adventofcode/2023/days/day11"
 	"github.com/thelande/adventofcode/2023/days/day2"
 	"github.com/thelande/adventofcode/2023/days/day3"
 	"github.com/thelande/adventofcode/2023/days/day4"
@@ -68,6 +69,8 @@ func main() {
 		dayObj = day9.Day9{}
 	case "day10":
 		dayObj = day10.Day10{}
+	case "day11":
+		dayObj = day11.Day11{}
 	default:
 		level.Error(logger).Log("msg", "Unknown day")
 		os.Exit(1)
