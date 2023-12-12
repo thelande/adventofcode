@@ -34,9 +34,37 @@ func (p *Pair) Distance() int64 {
 	return int64(math.Abs(float64(p.A.X-p.B.X)) + math.Abs(float64(p.A.Y-p.B.Y)))
 }
 
-func (d Day11) Part1(filename string, logger log.Logger) int64 {
-	var value int64
+func ExpandColumns(emptyCols []int, cells []*Cell, amount int) {
+	slices.Reverse(emptyCols)
+	for _, v := range emptyCols {
+		for i := range cells {
+			if cells[i].X > v {
+				cells[i].X += amount
+			}
+		}
+	}
+}
 
+func MakePairs(cells []*Cell) []*Pair {
+	var pairs []*Pair
+	for i := range cells {
+		for j := i + 1; j < len(cells); j++ {
+			pairs = append(pairs, &Pair{A: cells[i], B: cells[j]})
+		}
+	}
+	return pairs
+}
+
+func SumDistances(pairs []*Pair) int64 {
+	var value int64
+	for i := range pairs {
+		dist := pairs[i].Distance()
+		value += dist
+	}
+	return value
+}
+
+func (d Day11) Part1(filename string, logger log.Logger) int64 {
 	row := 0
 	width := 0
 	var emptyCols []int
@@ -71,37 +99,49 @@ func (d Day11) Part1(filename string, logger log.Logger) int64 {
 
 	// Process the empty columns in reverse to avoid increasing cells beyond
 	// an empty column.
-	slices.Reverse(emptyCols)
-	for _, v := range emptyCols {
-		for i := range cells {
-			if cells[i].X > v {
-				cells[i].X++
-			}
-		}
-	}
-
-	var pairs []*Pair
-	for i := range cells {
-		for j := i + 1; j < len(cells); j++ {
-			pairs = append(pairs, &Pair{A: cells[i], B: cells[j]})
-		}
-	}
-
+	ExpandColumns(emptyCols, cells, 1)
+	pairs := MakePairs(cells)
 	level.Debug(logger).Log("len(pairs)", len(pairs))
-	for i := range pairs {
-		dist := pairs[i].Distance()
-		value += dist
-	}
-
-	return value
+	return SumDistances(pairs)
 }
 
 func (d Day11) Part2(filename string, logger log.Logger) int64 {
-	var value int64
-
+	row := 0
+	width := 0
+	var emptyCols []int
+	var cells []*Cell
 	util.ReadPuzzleInput(filename, logger, func(line string, lineno int) error {
+		if lineno == 0 {
+			width = len(line)
+			// Construct emptyCols and then remove columns for each galaxy found per row.
+			for i := 0; i < width; i++ {
+				emptyCols = append(emptyCols, i)
+			}
+		}
+
+		if !strings.Contains(line, "#") {
+			// No galaxies on this line, double increment row
+			row += 999999
+		} else {
+			for i := 0; i < width; i++ {
+				if line[i] == '#' {
+					cells = append(cells, &Cell{X: i, Y: row, Galaxy: true})
+					colIdx := slices.Index(emptyCols, i)
+					if colIdx >= 0 {
+						emptyCols = slices.Delete(emptyCols, colIdx, colIdx+1)
+					}
+				}
+			}
+		}
+
+		row++
 		return nil
 	})
 
-	return value
+	// Process the empty columns in reverse to avoid increasing cells beyond
+	// an empty column.
+	ExpandColumns(emptyCols, cells, 999999)
+	pairs := MakePairs(cells)
+	level.Debug(logger).Log("len(pairs)", len(pairs))
+	return SumDistances(pairs)
 }
